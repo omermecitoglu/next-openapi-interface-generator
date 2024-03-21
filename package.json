@@ -1,6 +1,6 @@
 {
   "name": "@omer-x/next-openapi-interface-generator",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "OpenAPI interface generator for Next.js",
   "keywords": [
     "next",
@@ -50,6 +50,7 @@
   "devDependencies": {
     "@omer-x/eslint-config": "^1.0.6",
     "@types/node": "^20.11.30",
+    "@types/swagger-jsdoc": "^6.0.4",
     "@types/yargs": "^17.0.32",
     "raw-loader": "^4.0.2",
     "ts-loader": "^9.5.1",
