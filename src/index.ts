@@ -4,6 +4,7 @@ import path from "node:path";
 import getAppName from "./core/app";
 import getArgument from "./core/arguments";
 import createFile from "./core/file";
+import generateDeclaration from "./core/renderers/declaration";
 import generateInterface from "./core/renderers/interface";
 import generateSchema from "./core/renderers/schema";
 import { resolveSchemas, resolveSchemasFromProps } from "./core/resolvers/imported-schema";
@@ -37,4 +38,7 @@ import generateSwaggerJson from "./core/swagger";
 
   const content = generateInterface(envName, resolvedPaths);
   await createFile(content, "index.js", outputDir);
+
+  const declaration = generateDeclaration(schemas, data.paths);
+  await createFile(declaration, "index.d.ts", outputDir);
 })();
