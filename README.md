@@ -1,44 +1,36 @@
-# OpenAPI Interface Generator
+# Next OpenAPI Interface Generator
 
-Provides an npm command to generate TypeScript code for services defined in a source JSON file.
+![GitHub](https://img.shields.io/github/license/omermecitoglu/next-openapi-interface-generator)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/omermecitoglu/next-openapi-interface-generator)
+
+This script automates the generation of documentation and TypeScript interfaces for a service, making it easier to maintain and interact with the service in a TypeScript environment.
 
 ## Installation
 
 ```bash
-npm install @omer-x/ts-openapi-interface-generator
+npm install @omer-x/next-openapi-interface-generator
 ```
 
 ## Usage
 
-1. Ensure you have a `source.json` file in the root directory of your project with the following structure:
-
-```json
-{
-  "services": [
-    {
-      "name": "ExampleService",
-      "url": "https://example.com/api",
-      "specs": "/swagger"
-    }
-  ]
-}
+```bash
+generate-service-interface --source <source_directory> --output <output_directory>
 ```
 
-2. Run the following command to generate code for each service defined in `source.json`:
+### Options
+
+- `--source`, `-s`: Specify the source directory. Default: `src`
+- `--output`, `-o`: Specify the output directory. Default: `dist`
+
+## Example
 
 ```bash
-npx generate-service-interfaces
+generate-service-interface --source src/app --output dist
 ```
 
-This will generate code in the `src` folder for each service.
+## Contributing
 
-## Configuration
-
-You can customize the source JSON file by specifying additional properties for each service:
-
-- `name`: The name of the service.
-- `url`: The URL of the service.
-- `specs` (optional): The path to the OpenAPI specifications. Default value is "/swagger".
+Contributions are welcome! Please feel free to submit a pull request or open an issue if you find any bugs or have any suggestions for improvement.
 
 ## License
 

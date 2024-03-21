@@ -1,22 +1,25 @@
 {
-  "name": "@omer-x/ts-openapi-interface-generator",
-  "version": "1.0.0",
-  "description": "OpenAPI interface generator for TypeScript",
+  "name": "@omer-x/next-openapi-interface-generator",
+  "version": "0.0.0",
+  "description": "OpenAPI interface generator for Next.js",
   "keywords": [
+    "next",
+    "nextjs",
     "typescript",
     "openapi",
+    "swagger",
     "interface",
     "generator",
     "codegen"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/omermecitoglu/ts-openapi-interface-generator.git"
+    "url": "git+https://github.com/omermecitoglu/next-openapi-interface-generator.git"
   },
   "bugs": {
-    "url": "https://github.com/omermecitoglu/ts-openapi-interface-generator/issues"
+    "url": "https://github.com/omermecitoglu/next-openapi-interface-generator/issues"
   },
-  "homepage": "https://github.com/omermecitoglu/ts-openapi-interface-generator#readme",
+  "homepage": "https://github.com/omermecitoglu/next-openapi-interface-generator#readme",
   "private": false,
   "publishConfig": {
     "access": "public"
@@ -27,8 +30,9 @@
     "url": "https://omermecitoglu.github.io"
   },
   "license": "MIT",
+  "main": "bin/index.js",
   "bin": {
-    "generate-service-interfaces": "./bin/index.js"
+    "generate-service-interface": "./bin/index.js"
   },
   "files": [
     "bin/"
