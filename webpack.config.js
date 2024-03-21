@@ -34,6 +34,7 @@ module.exports = {
   },
   externals: [
     "handlebars",
+    "swagger-jsdoc",
     "yargs",
   ],
   externalsType: "commonjs",
