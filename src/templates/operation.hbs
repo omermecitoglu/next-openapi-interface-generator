@@ -1,0 +1,18 @@
+export async function {{name}}({{parameters}}) {
+  const url = new URL({{{path}}}, BASE_URL);
+  {{#each searchParams}}
+  {{> searchParam }}
+  {{/each}}
+  const response = await fetch(url, {
+    method: "{{method}}",
+  {{#if (hasRequestBody parameters)}}
+    body: JSON.stringify(requestBody),
+  {{/if}}
+  });
+  switch (response.status) {
+  {{#each responses}}
+    {{{this}}}
+  {{/each}}
+    default: throw new Error(`Unexpected response (${response.status})`);
+  }
+}

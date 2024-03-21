@@ -1,0 +1,10 @@
+{{#each schemas}}
+import type {{this}} from "./schemas/{{this}}";
+{{/each}}
+
+const BASE_URL = "{{baseUrl}}";
+
+{{#each operations}}
+{{> operation }}
+
+{{/each}}

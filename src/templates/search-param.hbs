@@ -1,0 +1,5 @@
+{{#if required}}
+url.searchParams.append("{{name}}", {{name}});
+{{else}}
+if ({{name}}) url.searchParams.append("{{name}}", {{name}});
+{{/if}}
