@@ -24,3 +24,10 @@ export function resolveResponses(responses: Operation["responses"]) {
     `case ${statusCode}: ${handleResponse(statusCode, response, false)};`
   ));
 }
+
+export function resolveResponsesForDocs(responses: Operation["responses"]) {
+  return Object.entries(responses).map(([statusCode, response]) => ({
+    statusCode,
+    description: response.description,
+  }));
+}

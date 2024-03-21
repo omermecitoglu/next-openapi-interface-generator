@@ -3,8 +3,10 @@ import "~/core/renderers/parameter";
 import path from "node:path";
 import getAppName from "./core/app";
 import getArgument from "./core/arguments";
+import capitalize from "./core/capitalize";
 import createFile from "./core/file";
 import generateDeclaration from "./core/renderers/declaration";
+import generateDocumentation from "./core/renderers/documentation";
 import generateInterface from "./core/renderers/interface";
 import generateSchema from "./core/renderers/schema";
 import { resolveSchemas, resolveSchemasFromProps } from "./core/resolvers/imported-schema";
@@ -31,6 +33,7 @@ import generateSwaggerJson from "./core/swagger";
 
   const packageName = getAppName();
   const appName = packageName.split("/").pop() ?? "unknown-service";
+  const serviceName = capitalize(appName.replace(/-/g, " "));
   const envName = `${appName.replace(/-/g, "_").toUpperCase()}_BASE_URL`;
 
   const schemas = resolveSchemas(data.paths);
@@ -41,4 +44,7 @@ import generateSwaggerJson from "./core/swagger";
 
   const declaration = generateDeclaration(schemas, data.paths);
   await createFile(declaration, "index.d.ts", outputDir);
+
+  const doc = generateDocumentation(serviceName, packageName, envName, data.paths);
+  await createFile(doc, "README.md", process.cwd());
 })();
