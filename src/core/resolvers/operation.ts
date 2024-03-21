@@ -27,7 +27,7 @@ export default function resolveOperations(paths: OpenAPI["paths"]) {
     name: operation.operationId,
     method: method.toUpperCase(),
     path: quotePathName(path, operation.parameters ?? []),
-    parameters: resolveOperationParams(operation, true).join(", "),
+    parameters: resolveOperationParams(operation, false).join(", "),
     searchParams: getSearchParams(operation.parameters ?? []),
     responses: resolveResponses(operation.responses),
   }));

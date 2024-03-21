@@ -21,6 +21,6 @@ function handleResponse(statusCode: string, response: Operation["responses"]["20
 
 export function resolveResponses(responses: Operation["responses"]) {
   return Object.entries(responses).map(([statusCode, response]) => (
-    `case ${statusCode}: ${handleResponse(statusCode, response, true)};`
+    `case ${statusCode}: ${handleResponse(statusCode, response, false)};`
   ));
 }

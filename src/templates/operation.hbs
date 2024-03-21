@@ -1,5 +1,5 @@
 export async function {{name}}({{parameters}}) {
-  const url = new URL({{{path}}}, BASE_URL);
+  const url = createURL({{{path}}});
   {{#each searchParams}}
   {{> searchParam }}
   {{/each}}
