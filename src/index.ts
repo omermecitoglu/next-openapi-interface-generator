@@ -22,12 +22,14 @@ import generateSwaggerJson from "./core/swagger";
   const outputDir = path.resolve(process.cwd(), outputFolder);
 
   const data = generateSwaggerJson(sourceDir);
-  for (const [schemaName, schema] of Object.entries(data.components.schemas)) {
-    if (schema.type === "object") {
-      const properties = resolveProperties(schema.properties, schema.required ?? []);
-      const importedSchemas = resolveSchemasFromProps(schema.properties);
-      const content = generateSchema(schemaName, properties, importedSchemas);
-      await createFile(content, `${schemaName}.ts`, outputDir, "schemas");
+  if (data.components.schemas) {
+    for (const [schemaName, schema] of Object.entries(data.components.schemas)) {
+      if (schema.type === "object") {
+        const properties = resolveProperties(schema.properties, schema.required ?? []);
+        const importedSchemas = resolveSchemasFromProps(schema.properties);
+        const content = generateSchema(schemaName, properties, importedSchemas);
+        await createFile(content, `${schemaName}.ts`, outputDir, "schemas");
+      }
     }
   }
 

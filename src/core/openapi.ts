@@ -57,7 +57,7 @@ type HttpMethod = "get" | "post" | "patch" | "put" | "delete";
 
 export type OpenAPI = {
   components: {
-    schemas: Record<string, SchemaComponent>,
+    schemas?: Record<string, SchemaComponent>,
   },
   paths: Record<string, Record<HttpMethod, Operation>>,
 };
