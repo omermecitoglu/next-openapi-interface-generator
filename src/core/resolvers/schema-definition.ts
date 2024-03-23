@@ -22,6 +22,7 @@ export function resolveSchema(definition: SchemaDefinition): string {
         return "string";
       }
       case "number": return "number";
+      case "boolean": return "boolean";
       case "array": {
         if (definition.items) {
           if (Array.isArray(definition.items)) {

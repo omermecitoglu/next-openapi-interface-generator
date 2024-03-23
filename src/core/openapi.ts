@@ -1,5 +1,5 @@
 export type SchemaDefinition = {
-  type?: "string" | "number" | "array" | "object",
+  type?: "string" | "number" | "boolean" | "array" | "object",
   format?: "date" | "unknown",
   description: string,
   readOnly: boolean,
