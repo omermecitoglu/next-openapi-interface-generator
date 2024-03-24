@@ -7,6 +7,8 @@ export type SchemaDefinition = {
   items?: SchemaDefinition | SchemaDefinition[],
   oneOf?: SchemaDefinition[],
   enum?: (string | null)[],
+  properties?: Record<string, SchemaDefinition>,
+  required?: string[],
 };
 
 type SchemaComponent = {

@@ -6,6 +6,13 @@ function resolveArray(items: SchemaDefinition[], isArray: boolean) {
   return isArray ? `(${names})[]` : names;
 }
 
+function resolveObject(props: Record<string, SchemaDefinition>, required: string[]) {
+  return Object.entries(props).map(([propName, propDefinition]) => {
+    const isRequired = required.includes(propName);
+    return `${propName}${isRequired ? "" : "?"}: ${resolveSchema(propDefinition)}`;
+  });
+}
+
 function resolveEnumItem(item: string | null) {
   if (item === null) return "null";
   return `"${item}"`;
@@ -32,7 +39,13 @@ export function resolveSchema(definition: SchemaDefinition): string {
         }
         return "unknown[]";
       }
-      case "object": return "unknown";
+      case "object": {
+        if (definition.properties) {
+          const props = resolveObject(definition.properties, definition.required ?? []);
+          return `{ ${props.join(", ")} }`;
+        }
+        return "unknown";
+      }
     }
   }
   if (definition.$ref) {
@@ -48,11 +61,16 @@ export function simplifySchema(resolvedSchema: string) {
   return resolvedSchema.replace(/\[|\]/g, "");
 }
 
+function isRawObject(schema: string) {
+  return (/\{.*\}/).test(schema);
+}
+
 export function filterGenericSchemas(resolvedSchemas: string[]) {
   const genericSchemas = [
     "string",
     "number",
+    "boolean",
     "unknown",
   ];
-  return resolvedSchemas.filter(s => !genericSchemas.includes(s));
+  return resolvedSchemas.filter(s => !genericSchemas.includes(s) && !isRawObject(s));
 }
