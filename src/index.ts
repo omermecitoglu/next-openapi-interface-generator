@@ -9,7 +9,7 @@ import generateDeclaration from "./core/renderers/declaration";
 import generateDocumentation from "./core/renderers/documentation";
 import generateInterface from "./core/renderers/interface";
 import generateSchema from "./core/renderers/schema";
-import { resolveSchemas, resolveSchemasFromProps } from "./core/resolvers/imported-schema";
+import { resolveSchemasFromProps } from "./core/resolvers/imported-schema";
 import resolveOperations from "./core/resolvers/operation";
 import resolveProperties from "./core/resolvers/property";
 import generateSwaggerJson from "./core/swagger";
@@ -38,13 +38,12 @@ import generateSwaggerJson from "./core/swagger";
   const serviceName = capitalize(appName.replace(/-/g, " "));
   const envName = `${appName.replace(/-/g, "_").toUpperCase()}_BASE_URL`;
 
-  const schemas = resolveSchemas(data.paths);
   const resolvedPaths = resolveOperations(data.paths);
 
   const content = generateInterface(envName, resolvedPaths);
   await createFile(content, "index.js", outputDir);
 
-  const declaration = generateDeclaration(schemas, data.paths);
+  const declaration = generateDeclaration(data.paths);
   await createFile(declaration, "index.d.ts", outputDir);
 
   const doc = generateDocumentation(serviceName, packageName, envName, data.paths);

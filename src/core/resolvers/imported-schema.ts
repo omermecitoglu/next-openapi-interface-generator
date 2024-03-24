@@ -10,10 +10,9 @@ function resolveRequestSchemas(requestBody: Operation["requestBody"]) {
 
 function resolveResponseSchemas(responses: Operation["responses"]) {
   return Object.values(responses).map(response => {
-    const resolvedSchemas = Object.values(response.content ?? {}).map(content => {
+    return Object.values(response.content ?? {}).map(content => {
       return simplifySchema(resolveSchema(content.schema));
-    });
-    return filterGenericSchemas(resolvedSchemas).flat();
+    }).flat();
   }).flat();
 }
 
@@ -22,7 +21,8 @@ export function resolveSchemas(paths: OpenAPI["paths"]) {
     ...resolveRequestSchemas(operation.requestBody),
     ...resolveResponseSchemas(operation.responses),
   ])).flat();
-  return Array.from(new Set(collection)).toSorted();
+  const uniqueCollection = Array.from(new Set(collection));
+  return filterGenericSchemas(uniqueCollection).toSorted();
 }
 
 function resolvePropDefinition(definition: SchemaDefinition) {
@@ -43,6 +43,6 @@ function resolvePropDefinition(definition: SchemaDefinition) {
 
 export function resolveSchemasFromProps(props: Record<string, SchemaDefinition>) {
   const collection = Object.values(props).map(resolvePropDefinition).flat();
-  collection.sort();
-  return Array.from(new Set(filterGenericSchemas(collection)));
+  const uniqueCollection = Array.from(new Set(collection));
+  return filterGenericSchemas(uniqueCollection).toSorted();
 }
