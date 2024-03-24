@@ -1,5 +1,5 @@
 import type { SchemaDefinition } from "~/core/openapi";
-import { resolveSchema } from "./schema-definition";
+import { resolveSchemaWithNull } from "./schema-definition";
 
 export type ModelProperty = {
   content: string,
@@ -11,7 +11,7 @@ export default function resolveProperties(collection: Record<string, SchemaDefin
     const isRequired = required.includes(propertyName);
     const content = [
       `${propertyName}${isRequired ? "" : "?"}:`,
-      `${resolveSchema(property)},`,
+      `${resolveSchemaWithNull(property)},`,
     ];
     if (property.readOnly) content.unshift("readonly");
     return {

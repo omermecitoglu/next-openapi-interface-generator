@@ -3,6 +3,7 @@ export type SchemaDefinition = {
   format?: "date" | "unknown",
   description: string,
   readOnly: boolean,
+  nullable: boolean,
   $ref?: string,
   items?: SchemaDefinition | SchemaDefinition[],
   oneOf?: SchemaDefinition[],

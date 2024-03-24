@@ -57,6 +57,13 @@ export function resolveSchema(definition: SchemaDefinition): string {
   return "unknown";
 }
 
+export function resolveSchemaWithNull(definition: SchemaDefinition) {
+  if (definition.nullable) {
+    return `${resolveSchema(definition)} | null`
+  }
+  resolveSchema(definition)
+}
+
 export function simplifySchema(resolvedSchema: string) {
   return resolvedSchema.replace(/\[|\]/g, "");
 }
