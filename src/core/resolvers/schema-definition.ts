@@ -59,9 +59,9 @@ export function resolveSchema(definition: SchemaDefinition): string {
 
 export function resolveSchemaWithNull(definition: SchemaDefinition) {
   if (definition.nullable) {
-    return `${resolveSchema(definition)} | null`
+    return `${resolveSchema(definition)} | null`;
   }
-  resolveSchema(definition)
+  return resolveSchema(definition);
 }
 
 export function simplifySchema(resolvedSchema: string) {
