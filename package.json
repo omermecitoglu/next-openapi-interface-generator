@@ -1,6 +1,6 @@
 {
   "name": "@omer-x/next-openapi-interface-generator",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "OpenAPI interface generator for Next.js",
   "keywords": [
     "next",

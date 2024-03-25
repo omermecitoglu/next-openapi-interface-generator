@@ -4,6 +4,7 @@ import path from "node:path";
 import getAppName from "./core/app";
 import getArgument from "./core/arguments";
 import capitalize from "./core/capitalize";
+import generateConfigs from "./core/configs";
 import createFile from "./core/file";
 import generateDeclaration from "./core/renderers/declaration";
 import generateDocumentation from "./core/renderers/documentation";
@@ -28,7 +29,7 @@ import generateSwaggerJson from "./core/swagger";
         const properties = resolveProperties(schema.properties, schema.required ?? []);
         const importedSchemas = resolveSchemasFromProps(schema.properties);
         const content = generateSchema(schemaName, properties, importedSchemas);
-        await createFile(content, `${schemaName}.ts`, outputDir, "schemas");
+        await createFile(content, `${schemaName}.ts`, outputDir, "dist/schemas");
       }
     }
   }
@@ -41,11 +42,14 @@ import generateSwaggerJson from "./core/swagger";
   const resolvedPaths = resolveOperations(data.paths);
 
   const content = generateInterface(envName, resolvedPaths);
-  await createFile(content, "index.js", outputDir);
+  await createFile(content, "index.js", outputDir, "dist");
 
   const declaration = generateDeclaration(data.paths);
-  await createFile(declaration, "index.d.ts", outputDir);
+  await createFile(declaration, "index.d.ts", outputDir, "dist");
 
   const doc = generateDocumentation(serviceName, packageName, envName, data.paths);
-  await createFile(doc, "README.md", process.cwd());
+  await createFile(doc, "README.md", outputDir);
+
+  const configs = generateConfigs("dist", []);
+  await createFile(configs + "\n", "package.json", outputDir);
 })();
