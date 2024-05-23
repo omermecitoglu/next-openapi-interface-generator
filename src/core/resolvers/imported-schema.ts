@@ -1,4 +1,5 @@
 import type { OpenAPI, Operation, SchemaDefinition } from "~/core/openapi";
+import { getTupleItems, isTuple } from "~/core/tuple";
 import getContentSchema from "./content";
 import resolveEndpoints from "./enpoint";
 import { filterGenericSchemas, resolveSchema, simplifySchema } from "./schema-definition";
@@ -16,12 +17,21 @@ function resolveResponseSchemas(responses: Operation["responses"]) {
   }).flat();
 }
 
+function extractTuples(collection: string[]) {
+  return collection.map(schema => {
+    if (isTuple(schema.replaceAll("[]", ""))) {
+      return getTupleItems(schema);
+    }
+    return schema;
+  }).flat();
+}
+
 export function resolveSchemas(paths: OpenAPI["paths"]) {
   const collection = resolveEndpoints(paths).map(({ operation }) => ([
     ...resolveRequestSchemas(operation.requestBody),
     ...resolveResponseSchemas(operation.responses),
   ])).flat();
-  const uniqueCollection = Array.from(new Set(collection));
+  const uniqueCollection = Array.from(new Set(extractTuples(collection)));
   return filterGenericSchemas(uniqueCollection).toSorted();
 }
 
@@ -43,6 +53,6 @@ function resolvePropDefinition(definition: SchemaDefinition) {
 
 export function resolveSchemasFromProps(props: Record<string, SchemaDefinition>) {
   const collection = Object.values(props).map(resolvePropDefinition).flat();
-  const uniqueCollection = Array.from(new Set(collection));
+  const uniqueCollection = Array.from(new Set(extractTuples(collection)));
   return filterGenericSchemas(uniqueCollection).toSorted();
 }

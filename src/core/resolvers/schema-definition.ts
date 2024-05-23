@@ -1,4 +1,5 @@
 import type { SchemaDefinition } from "~/core/openapi";
+import { getTupleItems, isTuple } from "~/core/tuple";
 
 function resolveArray(items: SchemaDefinition[], isArray: boolean) {
   const schemas = items.map(resolveSchema);
@@ -95,12 +96,17 @@ function isEverydayType(schema: string) {
 }
 
 function isArraySchema(schema: string) {
-  return schema.includes("[]");
+  return schema.endsWith("[]");
 }
 
 function isGenericSchema(schema: string) {
   if (isArraySchema(schema)) {
     return isGenericSchema(schema.replace("[]", ""));
+  }
+  if (isTuple(schema)) {
+    const items = getTupleItems(schema);
+    if (items.every(isGenericSchema)) return true;
+    throw new Error("There is a named type in the tuple. This resolver is not smart enough to handle that.");
   }
   if (isEverydayType(schema)) return true;
   if (isRawObject(schema)) return true;
