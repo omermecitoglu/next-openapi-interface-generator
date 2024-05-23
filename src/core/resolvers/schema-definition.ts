@@ -72,12 +72,29 @@ function isRawObject(schema: string) {
   return (/\{.*\}/).test(schema);
 }
 
-export function filterGenericSchemas(resolvedSchemas: string[]) {
+function isEverydayType(schema: string) {
   const genericSchemas = [
     "string",
     "number",
     "boolean",
     "unknown",
   ];
-  return resolvedSchemas.filter(s => !genericSchemas.includes(s) && !isRawObject(s));
+  return genericSchemas.includes(schema);
+}
+
+function isArraySchema(schema: string) {
+  return schema.includes("[]");
+}
+
+function isGenericSchema(schema: string) {
+  if (isArraySchema(schema)) {
+    return isGenericSchema(schema.replace("[]", ""));
+  }
+  if (isEverydayType(schema)) return true;
+  if (isRawObject(schema)) return true;
+  return false;
+}
+
+export function filterGenericSchemas(resolvedSchemas: string[]) {
+  return resolvedSchemas.filter(s => !isGenericSchema(s));
 }
