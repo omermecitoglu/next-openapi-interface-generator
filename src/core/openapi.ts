@@ -7,6 +7,8 @@ export type SchemaDefinition = {
   $ref?: string,
   items?: SchemaDefinition | SchemaDefinition[],
   oneOf?: SchemaDefinition[],
+  minItems?: number,
+  maxItems?: number,
   enum?: (string | null)[],
   properties?: Record<string, SchemaDefinition>,
   required?: string[],

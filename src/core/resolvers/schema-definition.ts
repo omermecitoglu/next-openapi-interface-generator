@@ -18,6 +18,15 @@ function resolveEnumItem(item: string | null) {
   return `"${item}"`;
 }
 
+function resolveTuple(items: SchemaDefinition | SchemaDefinition[], length: number) {
+  if (Array.isArray(items)) {
+    const names = Array(length).fill(null).map((_, index) => resolveSchema(items[index % items.length]));
+    return `[${names.join(", ")}]`;
+  }
+  const names = Array(length).fill(null).map(() => resolveSchema(items));
+  return `[${names.join(", ")}]`;
+}
+
 export function resolveSchema(definition: SchemaDefinition): string {
   // TODO: handle definition.format === "date"
   if (definition.type) {
@@ -32,6 +41,9 @@ export function resolveSchema(definition: SchemaDefinition): string {
       case "boolean": return "boolean";
       case "array": {
         if (definition.items) {
+          if (definition.maxItems && definition.maxItems === definition.minItems) {
+            return resolveTuple(definition.items, definition.maxItems);
+          }
           if (Array.isArray(definition.items)) {
             return resolveArray(definition.items, true);
           }
