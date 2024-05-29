@@ -1,6 +1,6 @@
 export type SchemaDefinition = {
   type?: "string" | "number" | "boolean" | "array" | "object",
-  format?: "date" | "unknown",
+  format?: "date" | "binary",
   description: string,
   readOnly: boolean,
   nullable: boolean,

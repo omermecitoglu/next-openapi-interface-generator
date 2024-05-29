@@ -29,6 +29,7 @@ function resolveTuple(items: SchemaDefinition | SchemaDefinition[], length: numb
 }
 
 export function resolveSchema(definition: SchemaDefinition): string {
+  if (definition.format === "binary") return "File";
   // TODO: handle definition.format === "date"
   if (definition.type) {
     switch (definition.type) {
