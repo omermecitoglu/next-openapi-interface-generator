@@ -1,3 +1,4 @@
+import { hasFormData } from "~/core/form-data";
 import type { OpenAPI, OperationParameter } from "~/core/openapi";
 import resolveEndpoints from "~/core/resolvers/enpoint";
 import { resolveResponses } from "~/core/resolvers/response";
@@ -9,6 +10,7 @@ export type OperationTemplate = {
   path: string,
   parameters: string,
   searchParams: OperationParameter[],
+  hasFormData: boolean,
   responses: string[],
 };
 
@@ -29,6 +31,7 @@ export default function resolveOperations(paths: OpenAPI["paths"]) {
     path: quotePathName(path, operation.parameters ?? []),
     parameters: resolveOperationParams(operation, false).join(", "),
     searchParams: getSearchParams(operation.parameters ?? []),
+    hasFormData: hasFormData(operation),
     responses: resolveResponses(operation.responses),
   }));
 }

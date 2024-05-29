@@ -6,5 +6,9 @@ function createURL(endPoint) {
 }
 {{#each operations}}
 
+{{#if hasFormData}}
+{{> operationWithFormData }}
+{{else}}
 {{> operation }}
+{{/if}}
 {{/each}}

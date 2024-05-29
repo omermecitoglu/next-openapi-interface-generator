@@ -1,0 +1,20 @@
+export async function {{name}}({{parameters}}) {
+  const url = createURL({{{path}}});
+  {{#each searchParams}}
+  {{> searchParam }}
+  {{/each}}
+  const formData = new FormData();
+  for (const [key, value] of Object.entries(formBody)) {
+    formData.append(key, value);
+  }
+  const response = await fetch(url, {
+    method: "{{method}}",
+    body: formData,
+  });
+  switch (response.status) {
+  {{#each responses}}
+    {{{this}}}
+  {{/each}}
+    default: throw new Error(`Unexpected response (${response.status})`);
+  }
+}
