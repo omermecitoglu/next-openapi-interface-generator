@@ -38,7 +38,7 @@ type ResponseContent = {
   schema: SchemaDefinition,
 };
 
-type ContentType = "application/json" | "text/plain";
+type ContentType = "application/json" | "text/plain" | "multipart/form-data";
 
 export type Content = Record<ContentType, ResponseContent>;
 
