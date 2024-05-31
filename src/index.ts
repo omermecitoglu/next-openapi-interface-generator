@@ -41,12 +41,12 @@ import generateSwaggerJson from "./core/swagger";
   const serviceName = capitalize(appName.replace(/-/g, " "));
   const envName = `${appName.replace(/-/g, "_").toUpperCase()}_BASE_URL`;
 
-  const resolvedPaths = resolveOperations(data.paths);
+  const resolvedPaths = resolveOperations(data.paths, framework);
 
   const content = generateInterface(envName, resolvedPaths);
   await createFile(content, "index.js", outputDir, "dist");
 
-  const declaration = generateDeclaration(data.paths);
+  const declaration = generateDeclaration(data.paths, framework);
   await createFile(declaration, "index.d.ts", outputDir, "dist");
 
   const doc = generateDocumentation(serviceName, packageName, envName, data.paths);

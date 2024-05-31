@@ -12,6 +12,7 @@ export type OperationTemplate = {
   searchParams: OperationParameter[],
   hasFormData: boolean,
   responses: string[],
+  isCacheable: boolean,
 };
 
 function quotePathName(pathName: string, parameters: OperationParameter[]) {
@@ -24,14 +25,15 @@ function getSearchParams(parameters: OperationParameter[]) {
   return parameters.filter(param => param.in === "query");
 }
 
-export default function resolveOperations(paths: OpenAPI["paths"]) {
+export default function resolveOperations(paths: OpenAPI["paths"], framework: string | null) {
   return resolveEndpoints(paths).map<OperationTemplate>(({ method, path, operation }) => ({
     name: operation.operationId,
     method: method.toUpperCase(),
     path: quotePathName(path, operation.parameters ?? []),
-    parameters: resolveOperationParams(operation, false).join(", "),
+    parameters: resolveOperationParams(operation, method, false, framework).join(", "),
     searchParams: getSearchParams(operation.parameters ?? []),
     hasFormData: hasFormData(operation),
     responses: resolveResponses(operation.responses),
+    isCacheable: framework === "next" && method.toUpperCase() === "GET",
   }));
 }

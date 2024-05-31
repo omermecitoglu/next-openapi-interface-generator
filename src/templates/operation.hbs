@@ -8,6 +8,12 @@ export async function {{name}}({{parameters}}) {
   {{#if (hasRequestBody parameters)}}
     body: JSON.stringify(requestBody),
   {{/if}}
+  {{#if isCacheable}}
+    cache: cacheTag ? "force-cache" : "no-store",
+    next: {
+      tags: cacheTag ? [cacheTag] : undefined,
+    }
+  {{/if}}
   });
   switch (response.status) {
   {{#each responses}}

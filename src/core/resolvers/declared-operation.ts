@@ -17,10 +17,10 @@ function resolveOperationResult(responses: Operation["responses"]) {
   return schemas.find(s => typeof s === "string") ?? "unknown";
 }
 
-export function resolveDeclaredOperations(paths: OpenAPI["paths"]) {
-  return resolveEndpoints(paths).map<DeclaredOperation>(({ operation }) => ({
+export function resolveDeclaredOperations(paths: OpenAPI["paths"], framework: string | null) {
+  return resolveEndpoints(paths).map<DeclaredOperation>(({ method, operation }) => ({
     name: operation.operationId,
-    parameters: resolveOperationParams(operation, true).join(", "),
+    parameters: resolveOperationParams(operation, method, true, framework).join(", "),
     result: resolveOperationResult(operation.responses),
   }));
 }

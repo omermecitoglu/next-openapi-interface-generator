@@ -10,6 +10,12 @@ export async function {{name}}({{parameters}}) {
   const response = await fetch(url, {
     method: "{{method}}",
     body: formData,
+  {{#if isCacheable}}
+    cache: cacheTag ? "force-cache" : "no-store",
+    next: {
+      tags: cacheTag ? [cacheTag] : undefined,
+    }
+  {{/if}}
   });
   switch (response.status) {
   {{#each responses}}

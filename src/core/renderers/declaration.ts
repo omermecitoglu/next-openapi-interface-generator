@@ -9,10 +9,10 @@ type DeclarationTemplate = {
   operations: DeclaredOperation[],
 };
 
-export default function generateDeclaration(paths: OpenAPI["paths"]) {
+export default function generateDeclaration(paths: OpenAPI["paths"], framework: string | null) {
   const template = getTemplate<DeclarationTemplate>(declarationTemplate);
   return template({
     importedSchemas: resolveSchemas(paths),
-    operations: resolveDeclaredOperations(paths),
+    operations: resolveDeclaredOperations(paths, framework),
   });
 }

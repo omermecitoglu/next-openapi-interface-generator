@@ -23,7 +23,7 @@ function sortRequiredParamsFirst(paramA: OperationParameter, paramB: OperationPa
   return paramA.required ? -1 : 1;
 }
 
-export function resolveOperationParams(operation: Operation, typescript: boolean) {
+export function resolveOperationParams(operation: Operation, method: string, typescript: boolean, framework: string | null) {
   const resolvedParams = (operation.parameters ?? [])
     .filter(param => param.in === "path" || param.in === "query")
     .toSorted(sortRequiredParamsFirst)
@@ -38,6 +38,9 @@ export function resolveOperationParams(operation: Operation, typescript: boolean
     } else {
       collection.push(resolveRequestBody(operation.requestBody, typescript));
     }
+  }
+  if (framework === "next" && method.toUpperCase() === "GET") {
+    collection.unshift(typescript ? "cacheTag: string | null" : "cacheTag");
   }
   return collection;
 }
