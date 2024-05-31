@@ -16,6 +16,8 @@ import resolveProperties from "./core/resolvers/property";
 import generateSwaggerJson from "./core/swagger";
 
 (async () => {
+  const framework = await getArgument("framework") ?? null;
+
   const sourceFolder = await getArgument("source") ?? "src";
   const sourceDir = path.resolve(process.cwd(), sourceFolder);
 

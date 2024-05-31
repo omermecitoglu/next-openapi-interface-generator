@@ -21,6 +21,7 @@ generate-service-interface --source <source_directory> --output <output_director
 
 - `--source`, `-s`: Specify the source directory. Default: `src`
 - `--output`, `-o`: Specify the output directory. Default: `dist`
+- `--framework`, `-f`: Specify the target framework. Options: `next` (Optional)
 
 ## Example
 

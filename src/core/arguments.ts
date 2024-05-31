@@ -13,6 +13,12 @@ const argv = yargs
     type: "string",
     demandOption: false,
   })
+  .option("framework", {
+    alias: "f",
+    describe: "Specify the target framework",
+    type: "string",
+    demandOption: false,
+  })
   .argv;
 
 export default async function getArgument(name: string) {
