@@ -1,6 +1,8 @@
-import type { Operation } from "./openapi";
+import { getBodyRequest } from "./resolvers/body-request";
+import type { OperationObject } from "@omer-x/openapi-types/operation";
 
-export function hasFormData(operation: Operation) {
+export function hasFormData(operation: OperationObject) {
   if (!operation.requestBody) return false;
-  return "multipart/form-data" in operation.requestBody.content;
+  const body = getBodyRequest(operation.requestBody);
+  return "multipart/form-data" in body.content;
 }

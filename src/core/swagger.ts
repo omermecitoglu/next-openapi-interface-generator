@@ -1,6 +1,6 @@
 import path from "node:path";
 import swaggerJsdoc from "swagger-jsdoc";
-import type { OpenAPI } from "./openapi";
+import type { OpenApiDocument } from "@omer-x/openapi-types";
 
 export default function generateSwaggerJson(sourcePath: string,) {
   const spec = swaggerJsdoc({
@@ -16,5 +16,5 @@ export default function generateSwaggerJson(sourcePath: string,) {
       },
     },
   });
-  return spec as OpenAPI;
+  return spec as OpenApiDocument;
 }

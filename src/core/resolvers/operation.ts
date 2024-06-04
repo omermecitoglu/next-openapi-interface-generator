@@ -1,33 +1,42 @@
 import { hasFormData } from "~/core/form-data";
-import type { OpenAPI, OperationParameter } from "~/core/openapi";
 import resolveEndpoints from "~/core/resolvers/enpoint";
 import { resolveResponses } from "~/core/resolvers/response";
-import { resolveOperationParams } from "./operation-param";
+import { defaultOperationName } from "./operation-name";
+import { getParameter, resolveOperationParams } from "./operation-param";
+import type { ParameterObject } from "@omer-x/openapi-types/parameter";
+import type { PathsObject } from "@omer-x/openapi-types/paths";
+import type { ReferenceObject } from "@omer-x/openapi-types/reference";
 
 export type OperationTemplate = {
   name: string,
   method: string,
   path: string,
   parameters: string,
-  searchParams: OperationParameter[],
+  searchParams: ParameterObject[],
   hasFormData: boolean,
   responses: string[],
   isCacheable: boolean,
 };
 
-function quotePathName(pathName: string, parameters: OperationParameter[]) {
-  const pathParams = parameters.filter(p => p.in === "path");
+function quotePathName(pathName: string, parameters: (ParameterObject | ReferenceObject)[]) {
+  const pathParams = parameters.filter(p => {
+    const param = getParameter(p);
+    return param.in === "path";
+  });
   if (pathParams.length) return `\`${pathName.replaceAll("{", "${")}\``;
   return `"${pathName}"`;
 }
 
-function getSearchParams(parameters: OperationParameter[]) {
-  return parameters.filter(param => param.in === "query");
+function getSearchParams(parameters: (ParameterObject | ReferenceObject)[]) {
+  return parameters.filter(p => {
+    const param = getParameter(p);
+    return param.in === "query";
+  }) as ParameterObject[];
 }
 
-export default function resolveOperations(paths: OpenAPI["paths"], framework: string | null) {
+export default function resolveOperations(paths: PathsObject, framework: string | null) {
   return resolveEndpoints(paths).map<OperationTemplate>(({ method, path, operation }) => ({
-    name: operation.operationId,
+    name: operation.operationId || defaultOperationName(method, path),
     method: method.toUpperCase(),
     path: quotePathName(path, operation.parameters ?? []),
     parameters: resolveOperationParams(operation, method, false, framework).join(", "),

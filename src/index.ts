@@ -25,7 +25,7 @@ import generateSwaggerJson from "./core/swagger";
   const outputDir = path.resolve(process.cwd(), outputFolder);
 
   const data = generateSwaggerJson(sourceDir);
-  if (data.components.schemas) {
+  if (data.components?.schemas) {
     for (const [schemaName, schema] of Object.entries(data.components.schemas)) {
       if (schema.type === "object") {
         const properties = resolveProperties(schema.properties, schema.required ?? []);
@@ -35,6 +35,8 @@ import generateSwaggerJson from "./core/swagger";
       }
     }
   }
+
+  if (!data.paths) throw new Error("Couldn't find any valid path");
 
   const packageName = getAppName();
   const appName = packageName.split("/").pop() ?? "unknown-service";

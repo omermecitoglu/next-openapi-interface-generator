@@ -1,38 +1,46 @@
 import { hasFormData } from "~/core/form-data";
-import type { Operation, OperationParameter } from "~/core/openapi";
 import { resolveSchema } from "~/core/resolvers/schema-definition";
+import { getBodyRequest } from "./body-request";
 import getContentSchema from "./content";
+import type { OperationObject } from "@omer-x/openapi-types/operation";
+import type { ParameterObject } from "@omer-x/openapi-types/parameter";
+import type { ReferenceObject } from "@omer-x/openapi-types/reference";
+import type { RequestBodyObject } from "@omer-x/openapi-types/request-body";
 
-function resolveParam(param: OperationParameter, typescript: boolean) {
+function resolveParam(parameter: ParameterObject | ReferenceObject, typescript: boolean) {
+  const param = getParameter(parameter);
   if (!typescript) return param.name;
   return `${param.name}${param.required ? "" : "?"}: ${resolveSchema(param.schema)}`;
 }
 
-function resolveRequestBody(body: Exclude<Operation["requestBody"], undefined>, typescript: boolean) {
+function resolveRequestBody(requestBody: RequestBodyObject | ReferenceObject, typescript: boolean) {
+  const body = getBodyRequest(requestBody);
   if (!typescript) return "requestBody";
   return `requestBody${body.required ? "" : "?"}: ${resolveSchema(getContentSchema(body.content))}`;
 }
 
-function resolveFormData(body: Exclude<Operation["requestBody"], undefined>, typescript: boolean) {
+function resolveFormData(requestBody: RequestBodyObject | ReferenceObject, typescript: boolean) {
+  const body = getBodyRequest(requestBody);
   if (!typescript) return "formBody";
   return `formBody${body.required ? "" : "?"}: ${resolveSchema(getContentSchema(body.content))}`;
 }
 
-function sortRequiredParamsFirst(paramA: OperationParameter, paramB: OperationParameter) {
+function sortRequiredParamsFirst(a: ParameterObject | ReferenceObject, b: ParameterObject | ReferenceObject) {
+  const paramA = getParameter(a);
+  const paramB = getParameter(b);
   if (paramA.required === paramB.required) return 0;
   return paramA.required ? -1 : 1;
 }
 
-export function resolveOperationParams(operation: Operation, method: string, typescript: boolean, framework: string | null) {
+export function resolveOperationParams(operation: OperationObject, method: string, typescript: boolean, framework: string | null) {
   const resolvedParams = (operation.parameters ?? [])
-    .filter(param => param.in === "path" || param.in === "query")
+    .filter(param => "in" in param && (param.in === "path" || param.in === "query"))
     .toSorted(sortRequiredParamsFirst)
     .map(p => resolveParam(p, typescript));
   const collection = [
     ...resolvedParams,
   ];
   if (operation.requestBody) {
-    operation.requestBody.content;
     if (hasFormData(operation)) {
       collection.push(resolveFormData(operation.requestBody, typescript));
     } else {
@@ -43,4 +51,9 @@ export function resolveOperationParams(operation: Operation, method: string, typ
     collection.unshift(typescript ? "cacheTag: string | null" : "cacheTag");
   }
   return collection;
+}
+
+export function getParameter(source: ParameterObject | ReferenceObject) {
+  if ("$ref" in source) throw new Error("Parameter references not implemented yet.");
+  return source;
 }

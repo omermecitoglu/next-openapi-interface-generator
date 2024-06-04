@@ -1,7 +1,9 @@
-import type { Operation } from "~/core/openapi";
 import { resolveSchema } from "./schema-definition";
+import type { ReferenceObject } from "@omer-x/openapi-types/reference";
+import type { ResponseObject, ResponsesObject } from "@omer-x/openapi-types/response";
 
-function handleResponse(statusCode: string, response: Operation["responses"]["200"], typescript: boolean) {
+function handleResponse(statusCode: string, resp: ResponseObject | ReferenceObject, typescript: boolean) {
+  const response = getResponse(resp);
   if (statusCode.startsWith("2")) {
     if (response.content) {
       for (const [responseType, content] of Object.entries(response.content)) {
@@ -19,15 +21,25 @@ function handleResponse(statusCode: string, response: Operation["responses"]["20
   return `throw new Error("${response.description}")`;
 }
 
-export function resolveResponses(responses: Operation["responses"]) {
+export function resolveResponses(responses?: ResponsesObject) {
+  if (!responses) return [];
   return Object.entries(responses).map(([statusCode, response]) => (
     `case ${statusCode}: ${handleResponse(statusCode, response, false)};`
   ));
 }
 
-export function resolveResponsesForDocs(responses: Operation["responses"]) {
-  return Object.entries(responses).map(([statusCode, response]) => ({
-    statusCode,
-    description: response.description,
-  }));
+export function resolveResponsesForDocs(responses?: ResponsesObject) {
+  if (!responses) return [];
+  return Object.entries(responses).map(([statusCode, resp]) => {
+    const response = getResponse(resp);
+    return {
+      statusCode,
+      description: response.description,
+    };
+  });
+}
+
+export function getResponse(source: ResponseObject | ReferenceObject) {
+  if ("$ref" in source) throw new Error("Response references not implemented yet.");
+  return source;
 }

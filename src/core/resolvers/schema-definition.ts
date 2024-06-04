@@ -1,13 +1,13 @@
-import type { SchemaDefinition } from "~/core/openapi";
 import { getTupleItems, isTuple } from "~/core/tuple";
+import type { SchemaObject } from "@omer-x/openapi-types/schema";
 
-function resolveArray(items: SchemaDefinition[], isArray: boolean) {
+function resolveArray(items: SchemaObject[], isArray: boolean) {
   const schemas = items.map(resolveSchema);
   const names = schemas.join(" | ");
   return isArray ? `(${names})[]` : names;
 }
 
-function resolveObject(props: Record<string, SchemaDefinition>, required: string[]) {
+function resolveObject(props: Record<string, SchemaObject>, required: string[]) {
   return Object.entries(props).map(([propName, propDefinition]) => {
     const isRequired = required.includes(propName);
     return `${propName}${isRequired ? "" : "?"}: ${resolveSchema(propDefinition)}`;
@@ -19,7 +19,7 @@ function resolveEnumItem(item: string | null) {
   return `"${item}"`;
 }
 
-function resolveTuple(items: SchemaDefinition | SchemaDefinition[], length: number) {
+function resolveTuple(items: SchemaObject | SchemaObject[], length: number) {
   if (Array.isArray(items)) {
     const names = Array(length).fill(null).map((_, index) => resolveSchema(items[index % items.length]));
     return `[${names.join(", ")}]`;
@@ -28,12 +28,16 @@ function resolveTuple(items: SchemaDefinition | SchemaDefinition[], length: numb
   return `[${names.join(", ")}]`;
 }
 
-export function resolveSchema(definition: SchemaDefinition): string {
-  if (definition.format === "binary") return "File";
-  // TODO: handle definition.format === "date"
+export function resolveSchema(definition?: SchemaObject): string {
+  if (!definition) return "unknown";
+  if (definition.$ref) {
+    return definition.$ref.replace("#/components/schemas/", "");
+  }
   if (definition.type) {
     switch (definition.type) {
       case "string": {
+        if (definition.format === "binary") return "File";
+        // TODO: handle definition.format === "date"
         if (definition.enum) {
           return definition.enum.map(resolveEnumItem).join(" | ");
         }
@@ -62,16 +66,13 @@ export function resolveSchema(definition: SchemaDefinition): string {
       }
     }
   }
-  if (definition.$ref) {
-    return definition.$ref.replace("#/components/schemas/", "");
-  }
   if (definition.oneOf) {
     return resolveArray(definition.oneOf, false);
   }
   return "unknown";
 }
 
-export function resolveSchemaWithNull(definition: SchemaDefinition) {
+export function resolveSchemaWithNull(definition: SchemaObject) {
   if (definition.nullable) {
     return `${resolveSchema(definition)} | null`;
   }

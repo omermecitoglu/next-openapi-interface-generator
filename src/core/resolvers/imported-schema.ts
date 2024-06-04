@@ -1,16 +1,25 @@
-import type { OpenAPI, Operation, SchemaDefinition } from "~/core/openapi";
 import { getTupleItems, isTuple } from "~/core/tuple";
+import { getBodyRequest } from "./body-request";
 import getContentSchema from "./content";
 import resolveEndpoints from "./enpoint";
+import { getResponse } from "./response";
 import { filterGenericSchemas, resolveSchema, simplifySchema } from "./schema-definition";
+import type { PathsObject } from "@omer-x/openapi-types/paths";
+import type { ReferenceObject } from "@omer-x/openapi-types/reference";
+import type { RequestBodyObject } from "@omer-x/openapi-types/request-body";
+import type { ResponsesObject } from "@omer-x/openapi-types/response";
+import type { SchemaObject } from "@omer-x/openapi-types/schema";
 
-function resolveRequestSchemas(requestBody: Operation["requestBody"]) {
-  if (!requestBody) return [];
+function resolveRequestSchemas(body?: RequestBodyObject | ReferenceObject) {
+  if (!body) return [];
+  const requestBody = getBodyRequest(body);
   return [resolveSchema(getContentSchema(requestBody.content))];
 }
 
-function resolveResponseSchemas(responses: Operation["responses"]) {
-  return Object.values(responses).map(response => {
+function resolveResponseSchemas(responses?: ResponsesObject) {
+  if (!responses) return [];
+  return Object.values(responses).map(resp => {
+    const response = getResponse(resp);
     return Object.values(response.content ?? {}).map(content => {
       return simplifySchema(resolveSchema(content.schema));
     }).flat();
@@ -26,7 +35,7 @@ function extractTuples(collection: string[]) {
   }).flat();
 }
 
-export function resolveSchemas(paths: OpenAPI["paths"]) {
+export function resolveSchemas(paths: PathsObject) {
   const collection = resolveEndpoints(paths).map(({ operation }) => ([
     ...resolveRequestSchemas(operation.requestBody),
     ...resolveResponseSchemas(operation.responses),
@@ -35,15 +44,15 @@ export function resolveSchemas(paths: OpenAPI["paths"]) {
   return filterGenericSchemas(uniqueCollection).toSorted();
 }
 
-function resolvePropDefinition(definition: SchemaDefinition) {
+function resolvePropDefinition(definition: SchemaObject) {
+  if (definition.$ref) {
+    return [definition.$ref.replace("#/components/schemas/", "")];
+  }
   if (definition.type === "array" && definition.items) {
     if (Array.isArray(definition.items)) {
       return definition.items.map<string[]>(resolvePropDefinition).flat();
     }
     return [resolveSchema(definition.items)];
-  }
-  if (definition.$ref) {
-    return [definition.$ref.replace("#/components/schemas/", "")];
   }
   if (definition.oneOf) {
     return definition.oneOf.map<string[]>(resolvePropDefinition).flat();
@@ -51,7 +60,7 @@ function resolvePropDefinition(definition: SchemaDefinition) {
   return [];
 }
 
-export function resolveSchemasFromProps(props: Record<string, SchemaDefinition>) {
+export function resolveSchemasFromProps(props: Record<string, SchemaObject>) {
   const collection = Object.values(props).map(resolvePropDefinition).flat();
   const uniqueCollection = Array.from(new Set(extractTuples(collection)));
   return filterGenericSchemas(uniqueCollection).toSorted();

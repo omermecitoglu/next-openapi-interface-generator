@@ -1,12 +1,12 @@
-import type { SchemaDefinition } from "~/core/openapi";
 import { resolveSchemaWithNull } from "./schema-definition";
+import type { SchemaObject } from "@omer-x/openapi-types/schema";
 
 export type ModelProperty = {
   content: string,
   description: string,
 };
 
-export default function resolveProperties(collection: Record<string, SchemaDefinition>, required: string[]) {
+export default function resolveProperties(collection: Record<string, SchemaObject>, required: string[]) {
   return Object.entries(collection).map<ModelProperty>(([propertyName, property]) => {
     const isRequired = required.includes(propertyName);
     const content = [
@@ -16,7 +16,7 @@ export default function resolveProperties(collection: Record<string, SchemaDefin
     if (property.readOnly) content.unshift("readonly");
     return {
       content: content.join(" "),
-      description: property.description,
+      description: property.description || "missing description",
     };
   });
 }

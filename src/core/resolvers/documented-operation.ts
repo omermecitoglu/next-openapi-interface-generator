@@ -1,8 +1,11 @@
-import type { OpenAPI, Operation } from "~/core/openapi";
 import getContentSchema from "./content";
 import resolveEndpoints from "./enpoint";
+import { defaultOperationName } from "./operation-name";
+import { getParameter } from "./operation-param";
 import { resolveResponsesForDocs } from "./response";
 import { resolveSchema } from "./schema-definition";
+import type { PathsObject } from "@omer-x/openapi-types/paths";
+import type { ResponsesObject } from "@omer-x/openapi-types/response";
 
 type DocumentedParam = {
   name: string,
@@ -26,18 +29,21 @@ export type DocumentedOperation = {
   exceptions: DocumentedException[],
 };
 
-export function resolveDocumentedOperations(paths: OpenAPI["paths"]) {
-  return resolveEndpoints(paths).map<DocumentedOperation>(({ operation }) => {
-    const parameters = (operation.parameters ?? []).map<DocumentedParam>(p => ({
-      name: p.name,
-      description: p.description,
-      type: resolveSchema(p.schema),
-      optional: !p.required,
-    }));
+export function resolveDocumentedOperations(paths: PathsObject) {
+  return resolveEndpoints(paths).map<DocumentedOperation>(({ method, path, operation }) => {
+    const parameters = (operation.parameters ?? []).map<DocumentedParam>(p => {
+      const param = getParameter(p);
+      return {
+        name: param.name,
+        description: p.description || "missing description",
+        type: resolveSchema(param.schema),
+        optional: !param.required,
+      };
+    });
     return {
-      name: operation.operationId,
-      summary: operation.summary,
-      description: operation.description,
+      name: operation.operationId || defaultOperationName(method, path),
+      summary: operation.summary || "missing summary",
+      description: operation.description || "missing description",
       parameters: parameters.map(p => p.name).join(", "),
       parametersRaw: parameters,
       result: resolveOperationResult(operation.responses),
@@ -46,9 +52,13 @@ export function resolveDocumentedOperations(paths: OpenAPI["paths"]) {
   });
 }
 
-function resolveOperationResult(responses: Operation["responses"]) {
+function resolveOperationResult(responses?: ResponsesObject) {
+  if (!responses) return "unknown";
   const schemas = Object.values(responses).map(response => {
-    return response.content ? resolveSchema(getContentSchema(response.content)) : null;
+    if (response && "content" in response && response.content) {
+      return resolveSchema(getContentSchema(response.content));
+    }
+    return null;
   });
   return schemas.find(s => typeof s === "string") ?? "unknown";
 }
