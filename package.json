@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@omer-x/eslint-config": "^1.0.7",
+    "@omer-x/openapi-types": "^0.1.0",
     "@types/node": "^20.12.12",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/yargs": "^17.0.32",
