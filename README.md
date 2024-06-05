@@ -1,7 +1,8 @@
 # Next OpenAPI Interface Generator
 
-![GitHub](https://img.shields.io/github/license/omermecitoglu/next-openapi-interface-generator)
-![GitHub package.json version](https://img.shields.io/github/package-json/v/omermecitoglu/next-openapi-interface-generator)
+[![NPM](https://img.shields.io/npm/v/@omer-x/next-openapi-interface-generator?logo=npm)](https://www.npmjs.com/package/@omer-x/next-openapi-interface-generator)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 
 This script automates the generation of documentation and TypeScript interfaces for a service, making it easier to maintain and interact with the service in a TypeScript environment.
 
@@ -14,19 +15,20 @@ npm install @omer-x/next-openapi-interface-generator
 ## Usage
 
 ```bash
-generate-service-interface --source <source_directory> --output <output_directory>
+generate-service-interface --output <output_directory> --framework <framework_name> --schemas <schemas_directory>
 ```
 
 ### Options
 
-- `--source`, `-s`: Specify the source directory. Default: `src`
 - `--output`, `-o`: Specify the output directory. Default: `dist`
-- `--framework`, `-f`: Specify the target framework. Options: `next` (Optional)
+- `--framework`, `-f`: (Optional) Specify the target framework. Options: `next`
+- `--schemas`, `-s`: (Optional) Specify the path for predefined zod schemas. Multiple paths can be provided, separated by commas.
 
 ## Example
 
 ```bash
-generate-service-interface --source src/app --output dist
+generate-service-interface -o dist -f next -s src/models
+generate-service-interface -o dist -f next -s src/models/user,src/models/message
 ```
 
 ## Contributing

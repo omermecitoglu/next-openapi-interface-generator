@@ -11,7 +11,7 @@ module.exports = {
   },
   target: "node",
   plugins: [
-    new webpack.BannerPlugin({ banner: "#!/usr/bin/env node", raw: true }),
+    new webpack.BannerPlugin({ banner: "#!/usr/bin/env -S npx tsx", raw: true }),
   ],
   module: {
     rules: [
@@ -33,9 +33,10 @@ module.exports = {
     },
   },
   externals: [
+    "typescript",
     "handlebars",
-    "swagger-jsdoc",
     "yargs",
+    /^@omer-x\/next-openapi-json-generator$/,
   ],
   externalsType: "commonjs",
 };

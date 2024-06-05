@@ -48,7 +48,7 @@ function resolvePropDefinition(definition: SchemaObject) {
   if (definition.$ref) {
     return [definition.$ref.replace("#/components/schemas/", "")];
   }
-  if (definition.type === "array" && definition.items) {
+  if (definition.type === "array") {
     if (Array.isArray(definition.items)) {
       return definition.items.map<string[]>(resolvePropDefinition).flat();
     }

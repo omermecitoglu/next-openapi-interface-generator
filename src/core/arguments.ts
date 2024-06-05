@@ -1,12 +1,6 @@
 import yargs from "yargs";
 
 const argv = yargs
-  .option("source", {
-    alias: "s",
-    describe: "Specify the source directory",
-    type: "string",
-    demandOption: false,
-  })
   .option("output", {
     alias: "o",
     describe: "Specify the output directory",
@@ -16,6 +10,12 @@ const argv = yargs
   .option("framework", {
     alias: "f",
     describe: "Specify the target framework",
+    type: "string",
+    demandOption: false,
+  })
+  .option("schemas", {
+    alias: "s",
+    describe: "Specify the path for predefined zod schemas",
     type: "string",
     demandOption: false,
   })

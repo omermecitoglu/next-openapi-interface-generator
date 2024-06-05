@@ -1,6 +1,7 @@
 import "~/core/renderers/operation";
 import "~/core/renderers/parameter";
 import path from "node:path";
+import generateOpenApiSpec from "@omer-x/next-openapi-json-generator";
 import getAppName from "./core/app";
 import getArgument from "./core/arguments";
 import capitalize from "./core/capitalize";
@@ -13,18 +14,18 @@ import generateSchema from "./core/renderers/schema";
 import { resolveSchemasFromProps } from "./core/resolvers/imported-schema";
 import resolveOperations from "./core/resolvers/operation";
 import resolveProperties from "./core/resolvers/property";
-import generateSwaggerJson from "./core/swagger";
+import findPredefinedSchemas from "./core/schemas";
 
 (async () => {
-  const framework = await getArgument("framework") ?? null;
-
-  const sourceFolder = await getArgument("source") ?? "src";
-  const sourceDir = path.resolve(process.cwd(), sourceFolder);
-
   const outputFolder = await getArgument("output") ?? "dist";
   const outputDir = path.resolve(process.cwd(), outputFolder);
 
-  const data = generateSwaggerJson(sourceDir);
+  const framework = await getArgument("framework") ?? null;
+
+  const schemaPaths = await getArgument("schemas") ?? null;
+  const schemas = await findPredefinedSchemas(schemaPaths);
+
+  const data = await generateOpenApiSpec(schemas);
   if (data.components?.schemas) {
     for (const [schemaName, schema] of Object.entries(data.components.schemas)) {
       if (schema.type === "object") {
