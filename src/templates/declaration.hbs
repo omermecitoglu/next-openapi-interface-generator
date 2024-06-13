@@ -2,5 +2,5 @@
 import type {{this}} from "./schemas/{{this}}";
 {{/each}}
 {{#each operations}}
-export declare function {{name}}({{parameters}}): Promise<{{result}}>;
+export declare function {{name}}({{{parameters}}}): Promise<{{result}}>;
 {{/each}}

@@ -38,7 +38,7 @@ export function resolveSchema(definition?: SchemaObject): string {
       if (definition.format === "binary") return "File";
       // TODO: handle definition.format === "date"
       if (definition.enum) {
-        return definition.enum.map(resolveEnumItem).join(" | ");
+        return `(${definition.enum.map(resolveEnumItem).join(" | ")})`;
       }
       return "string";
     }
