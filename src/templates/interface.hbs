@@ -5,7 +5,7 @@ function createURL(endPoint) {
   return new URL(endPoint, process.env.{{envName}});
 }
 function appendSearchParam(params, key, value) {
-  if (!value) return;
+  if (value === undefined) return;
   if (Array.isArray(value)) {
     for (const item of value) {
       params.append(key, item);
