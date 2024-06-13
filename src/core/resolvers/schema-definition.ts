@@ -30,40 +30,32 @@ function resolveTuple(items: SchemaObject | SchemaObject[], length: number) {
 
 export function resolveSchema(definition?: SchemaObject): string {
   if (!definition) return "unknown";
-  if (definition.$ref) {
+  if ("$ref" in definition) {
     return definition.$ref.replace("#/components/schemas/", "");
   }
-  if (definition.type) {
-    switch (definition.type) {
-      case "string": {
-        if (definition.format === "binary") return "File";
-        // TODO: handle definition.format === "date"
-        if (definition.enum) {
-          return definition.enum.map(resolveEnumItem).join(" | ");
-        }
-        return "string";
+  switch (definition.type) {
+    case "string": {
+      if (definition.format === "binary") return "File";
+      // TODO: handle definition.format === "date"
+      if (definition.enum) {
+        return definition.enum.map(resolveEnumItem).join(" | ");
       }
-      case "number": return "number";
-      case "boolean": return "boolean";
-      case "array": {
-        if (definition.items) {
-          if (definition.maxItems && definition.maxItems === definition.minItems) {
-            return resolveTuple(definition.items, definition.maxItems);
-          }
-          if (Array.isArray(definition.items)) {
-            return resolveArray(definition.items, true);
-          }
-          return `${resolveSchema(definition.items)}[]`;
-        }
-        return "unknown[]";
+      return "string";
+    }
+    case "number": return "number";
+    case "boolean": return "boolean";
+    case "array": {
+      if (definition.maxItems && definition.maxItems === definition.minItems) {
+        return resolveTuple(definition.items, definition.maxItems);
       }
-      case "object": {
-        if (definition.properties) {
-          const props = resolveObject(definition.properties, definition.required ?? []);
-          return `{ ${props.join(", ")} }`;
-        }
-        return "unknown";
+      if (Array.isArray(definition.items)) {
+        return resolveArray(definition.items, true);
       }
+      return `${resolveSchema(definition.items)}[]`;
+    }
+    case "object": {
+      const props = resolveObject(definition.properties, definition.required ?? []);
+      return `{ ${props.join(", ")} }`;
     }
   }
   if (definition.oneOf) {
@@ -73,7 +65,7 @@ export function resolveSchema(definition?: SchemaObject): string {
 }
 
 export function resolveSchemaWithNull(definition: SchemaObject) {
-  if (definition.nullable) {
+  if ("nullable" in definition && definition.nullable) {
     return `${resolveSchema(definition)} | null`;
   }
   return resolveSchema(definition);

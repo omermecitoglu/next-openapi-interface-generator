@@ -13,7 +13,7 @@ export default function resolveProperties(collection: Record<string, SchemaObjec
       `${propertyName}${isRequired ? "" : "?"}:`,
       `${resolveSchemaWithNull(property)},`,
     ];
-    if (property.readOnly) content.unshift("readonly");
+    if ("readOnly" in property && property.readOnly) content.unshift("readonly");
     return {
       content: content.join(" "),
       description: property.description || "missing description",

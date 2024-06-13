@@ -45,7 +45,7 @@ export function resolveSchemas(paths: PathsObject) {
 }
 
 function resolvePropDefinition(definition: SchemaObject) {
-  if (definition.$ref) {
+  if ("$ref" in definition) {
     return [definition.$ref.replace("#/components/schemas/", "")];
   }
   if (definition.type === "array") {
