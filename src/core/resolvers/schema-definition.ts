@@ -38,7 +38,8 @@ export function resolveSchema(definition?: SchemaObject): string {
       if (definition.format === "binary") return "File";
       // TODO: handle definition.format === "date"
       if (definition.enum) {
-        return `(${definition.enum.map(resolveEnumItem).join(" | ")})`;
+        const collection = definition.enum.map(resolveEnumItem);
+        return collection.length > 1 ? `(${collection.join(" | ")})` : collection.join(" | ");
       }
       return "string";
     }
@@ -60,6 +61,9 @@ export function resolveSchema(definition?: SchemaObject): string {
   }
   if (definition.oneOf) {
     return resolveArray(definition.oneOf, false);
+  }
+  if (definition.anyOf) {
+    return resolveArray(definition.anyOf, false);
   }
   return "unknown";
 }
