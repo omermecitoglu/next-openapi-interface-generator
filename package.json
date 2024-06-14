@@ -1,6 +1,6 @@
 {
   "name": "@omer-x/next-openapi-interface-generator",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "OpenAPI interface generator for Next.js",
   "keywords": [
     "next",
@@ -43,7 +43,7 @@
     "dev": "webpack build --progress --mode=development --watch"
   },
   "dependencies": {
-    "@omer-x/next-openapi-json-generator": "^0.1.4",
+    "@omer-x/next-openapi-json-generator": "^0.2.0",
     "handlebars": "^4.7.8",
     "yargs": "^17.7.2"
   },

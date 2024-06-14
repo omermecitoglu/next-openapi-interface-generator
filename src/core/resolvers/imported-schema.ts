@@ -57,6 +57,9 @@ function resolvePropDefinition(definition: SchemaObject) {
   if (definition.oneOf) {
     return definition.oneOf.map<string[]>(resolvePropDefinition).flat();
   }
+  if (definition.anyOf) {
+    return definition.anyOf.map<string[]>(resolvePropDefinition).flat();
+  }
   return [];
 }
 
