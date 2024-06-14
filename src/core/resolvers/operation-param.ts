@@ -53,6 +53,41 @@ export function resolveOperationParams(operation: OperationObject, method: strin
   return collection;
 }
 
+function resolveDocParam(parameter: ParameterObject | ReferenceObject) {
+  const param = getParameter(parameter);
+  return {
+    name: param.name,
+    type: resolveSchema(param.schema),
+    description: param.description || "missing-description",
+  };
+}
+
+export function resolveDocParams(operation: OperationObject, method: string, framework: string | null) {
+  const resolvedParams = (operation.parameters ?? [])
+    .filter(param => "in" in param && (param.in === "path" || param.in === "query"))
+    .toSorted(sortRequiredParamsFirst)
+    .map(resolveDocParam);
+  const collection = [
+    ...resolvedParams,
+  ];
+  if (operation.requestBody) {
+    const body = getBodyRequest(operation.requestBody);
+    collection.push({
+      name: hasFormData(operation) ? "formBody" : "requestBody",
+      type: resolveSchema(getContentSchema(body.content)),
+      description: "Request body",
+    });
+  }
+  if (framework === "next" && method.toUpperCase() === "GET") {
+    collection.unshift({
+      name: "cacheTag",
+      type: "string | null",
+      description: "Tag name of Next.js fetch cache",
+    });
+  }
+  return collection;
+}
+
 export function getParameter(source: ParameterObject | ReferenceObject) {
   if ("$ref" in source) throw new Error("Parameter references not implemented yet.");
   return source;

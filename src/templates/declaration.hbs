@@ -2,5 +2,11 @@
 import type {{this}} from "./schemas/{{this}}";
 {{/each}}
 {{#each operations}}
+/**
+ * {{desription}}
+{{#each docParams}}
+ * @param { {{~type~}} } {{name}} - {{description}}
+{{/each}}
+ */
 export declare function {{name}}({{{parameters}}}): Promise<{{result}}>;
 {{/each}}
