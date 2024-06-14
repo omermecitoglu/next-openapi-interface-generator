@@ -31,7 +31,7 @@ import findPredefinedSchemas from "./core/schemas";
       if (schema.type === "object") {
         const properties = resolveProperties(schema.properties, schema.required ?? []);
         const importedSchemas = resolveSchemasFromProps(schema.properties);
-        const content = generateSchema(schemaName, properties, importedSchemas);
+        const content = generateSchema(schemaName, properties, importedSchemas, schema.description);
         await createFile(content, `${schemaName}.ts`, outputDir, "dist/schemas");
       }
     }
