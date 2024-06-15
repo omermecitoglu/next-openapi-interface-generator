@@ -10,7 +10,7 @@ function resolveArray(items: SchemaObject[], isArray: boolean) {
 function resolveObject(props: Record<string, SchemaObject>, required: string[]) {
   return Object.entries(props).map(([propName, propDefinition]) => {
     const isRequired = required.includes(propName);
-    return `${propName}${isRequired ? "" : "?"}: ${resolveSchema(propDefinition)}`;
+    return `${propName}${isRequired ? "" : "?"}: ${resolveSchemaWithNull(propDefinition)}`;
   });
 }
 
