@@ -9,9 +9,9 @@ export async function {{name}}({{parameters}}) {
     body: JSON.stringify(requestBody),
   {{/if}}
   {{#if isCacheable}}
-    cache: cacheTag ? "force-cache" : "no-store",
+    cache: cacheTags ? "force-cache" : "no-store",
     next: {
-      tags: cacheTag ? [cacheTag] : undefined,
+      tags: cacheTags ? (Array.isArray(cacheTags) ? cacheTags : [cacheTags]) : undefined,
     }
   {{/if}}
   });

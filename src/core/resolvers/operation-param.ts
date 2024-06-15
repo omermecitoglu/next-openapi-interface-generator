@@ -48,7 +48,7 @@ export function resolveOperationParams(operation: OperationObject, method: strin
     }
   }
   if (framework === "next" && method.toUpperCase() === "GET") {
-    collection.unshift(typescript ? "cacheTag: string | null" : "cacheTag");
+    collection.unshift(typescript ? "cacheTags: string | string[] | null" : "cacheTags");
   }
   return collection;
 }
@@ -80,9 +80,9 @@ export function resolveDocParams(operation: OperationObject, method: string, fra
   }
   if (framework === "next" && method.toUpperCase() === "GET") {
     collection.unshift({
-      name: "cacheTag",
-      type: "string | null",
-      description: "Tag name of Next.js fetch cache",
+      name: "cacheTags",
+      type: "string | string[] | null",
+      description: "Tag name(s) of Next.js fetch cache",
     });
   }
   return collection;
