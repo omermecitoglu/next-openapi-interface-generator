@@ -45,6 +45,7 @@ export function resolveSchema(definition?: SchemaObject): string {
     }
     case "number": return "number";
     case "boolean": return "boolean";
+    case "null": return "null";
     case "array": {
       if (definition.maxItems && definition.maxItems === definition.minItems) {
         return resolveTuple(definition.items, definition.maxItems);
