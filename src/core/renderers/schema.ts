@@ -15,6 +15,6 @@ export default function generateSchema(name: string, properties: ModelProperty[]
     name,
     description: description || "missing-description",
     properties,
-    importedSchemas,
+    importedSchemas: importedSchemas.filter(schemaName => schemaName !== name),
   });
 }
