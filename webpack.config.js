@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-undef */
 const path = require("path");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const webpack = require("webpack");
 
 module.exports = {
@@ -11,14 +12,11 @@ module.exports = {
   },
   target: "node",
   plugins: [
+    new CleanWebpackPlugin(),
     new webpack.BannerPlugin({ banner: "#!/usr/bin/env -S npx tsx", raw: true }),
   ],
   module: {
     rules: [
-      {
-        test: /\.hbs$/,
-        use: "raw-loader",
-      },
       {
         test: /\.ts$/,
         use: "ts-loader",
@@ -37,6 +35,7 @@ module.exports = {
     "handlebars",
     "yargs",
     /^@omer-x\/next-openapi-json-generator$/,
+    /^@omer-x\/openapi-code-generator$/,
   ],
   externalsType: "commonjs",
 };

@@ -1,6 +1,6 @@
 {
   "name": "@omer-x/next-openapi-interface-generator",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "OpenAPI interface generator for Next.js",
   "keywords": [
     "next",
@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@omer-x/next-openapi-json-generator": "^0.2.4",
-    "handlebars": "^4.7.8",
+    "@omer-x/openapi-code-generator": "^0.1.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
@@ -52,13 +52,11 @@
     "@omer-x/openapi-types": "^0.1.2",
     "@types/node": "^20.14.9",
     "@types/yargs": "^17.0.32",
+    "clean-webpack-plugin": "^4.0.0",
     "eslint": "^8.57.0",
-    "raw-loader": "^4.0.2",
     "ts-loader": "^9.5.1",
     "ts-unused-exports": "^10.1.0",
     "typescript": "^5.5.3",
-    "webpack": "^5.92.1",
-    "webpack-cli": "^5.1.4",
-    "zod": "^3.23.8"
+    "webpack-cli": "^5.1.4"
   }
 }
