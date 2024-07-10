@@ -19,9 +19,9 @@ import findPredefinedSchemas from "./core/schemas";
   const spec = await generateOpenApiSpec(schemas);
   if (!spec.paths) throw new Error("Couldn't find any valid path");
 
-  if (spec.components?.schemas) {
+  if (spec.components.schemas) {
     for (const [schemaName, schema] of Object.entries(spec.components.schemas)) {
-      if (schema.type !== "object") continue;
+      if (!schema.type) continue;
       const content = codegen.generateSchemaCode(schemaName, schema);
       await createFile(content, `${schemaName}.ts`, outputDir, "dist/schemas");
     }
