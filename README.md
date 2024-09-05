@@ -23,12 +23,14 @@ generate-service-interface --output <output_directory> --framework <framework_na
 - `--output`, `-o`: Specify the output directory. Default: `dist`
 - `--framework`, `-f`: (Optional) Specify the target framework. Options: `next`
 - `--schemas`, `-s`: (Optional) Specify the path for predefined zod schemas. Multiple paths can be provided, separated by commas.
+- `--definer`: (Optional) Name of the function that was exported from the [`Next OpenAPI Route Handler`](https://www.npmjs.com/package/@omer-x/next-openapi-route-handler)
 
 ## Example
 
 ```bash
 generate-service-interface -o dist -f next -s src/models
 generate-service-interface -o dist -f next -s src/models/user,src/models/message
+generate-service-interface -f next --definer createRoute
 ```
 
 ## Contributing
