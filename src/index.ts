@@ -16,7 +16,11 @@ import findPredefinedSchemas from "./core/schemas";
   const schemaPaths = await getArgument("schemas");
   const schemas = await findPredefinedSchemas(schemaPaths);
 
-  const spec = await generateOpenApiSpec(schemas);
+  const routeDefinerName = await getArgument("definer");
+
+  const spec = await generateOpenApiSpec(schemas, {
+    routeDefinerName,
+  });
   if (!spec.paths) throw new Error("Couldn't find any valid path");
 
   if (spec.components.schemas) {

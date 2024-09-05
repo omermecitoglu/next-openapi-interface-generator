@@ -22,6 +22,11 @@ const argv = yargs
     demandOption: false,
     default: null,
   })
+  .option("definer", {
+    describe: "Specify the name of definer function",
+    type: "string",
+    demandOption: false,
+  })
   .argv;
 
 type RemoveKeys<T, K extends keyof T> = {
