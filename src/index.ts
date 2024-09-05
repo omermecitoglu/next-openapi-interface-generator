@@ -8,12 +8,12 @@ import createFile from "./core/file";
 import findPredefinedSchemas from "./core/schemas";
 
 (async () => {
-  const outputFolder = await getArgument("output") ?? "dist";
+  const outputFolder = await getArgument("output");
   const outputDir = path.resolve(process.cwd(), outputFolder);
 
-  const framework = await getArgument("framework") ?? null;
+  const framework = await getArgument("framework");
 
-  const schemaPaths = await getArgument("schemas") ?? null;
+  const schemaPaths = await getArgument("schemas");
   const schemas = await findPredefinedSchemas(schemaPaths);
 
   const spec = await generateOpenApiSpec(schemas);
