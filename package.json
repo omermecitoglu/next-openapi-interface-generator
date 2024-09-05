@@ -43,14 +43,14 @@
     "dev": "webpack build --progress --mode=development --watch"
   },
   "dependencies": {
-    "@omer-x/next-openapi-json-generator": "^0.3.1",
-    "@omer-x/openapi-code-generator": "^0.3.1",
+    "@omer-x/next-openapi-json-generator": "^0.4.0",
+    "@omer-x/openapi-code-generator": "^0.3.2",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@omer-x/eslint-config": "^1.0.7",
     "@omer-x/openapi-types": "^0.2.1",
-    "@types/node": "^22.4.0",
+    "@types/node": "^22.5.4",
     "@types/yargs": "^17.0.33",
     "clean-webpack-plugin": "^4.0.0",
     "eslint": "^8.57.0",
