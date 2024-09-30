@@ -36,6 +36,7 @@ module.exports = {
     "yargs",
     /^@omer-x\/next-openapi-json-generator$/,
     /^@omer-x\/openapi-code-generator$/,
+    /^@omer-x\/package-metadata$/,
   ],
   externalsType: "commonjs",
 };
