@@ -2,8 +2,8 @@ import path from "node:path";
 import generateOpenApiSpec from "@omer-x/next-openapi-json-generator";
 import * as codegen from "@omer-x/openapi-code-generator";
 import getPackageMetadata from "@omer-x/package-metadata";
+import * as changeCase from "change-case";
 import getArgument from "./core/arguments";
-import capitalize from "./core/capitalize";
 import createFile from "./core/file";
 import findPredefinedSchemas from "./core/schemas";
 
@@ -32,8 +32,8 @@ import findPredefinedSchemas from "./core/schemas";
   }
 
   const { packageName, moduleName: appName } = getPackageMetadata();
-  const serviceName = capitalize(appName.replace(/-/g, " "));
-  const envName = `${appName.replace(/-/g, "_").toUpperCase()}_BASE_URL`;
+  const serviceName = changeCase.capitalCase(appName);
+  const envName = `${changeCase.constantCase(appName)}_BASE_URL`;
 
   await createFile(codegen.generateInterface(envName, spec.paths, framework), "index.js", outputDir, "dist");
   await createFile(codegen.generateDeclaration(spec.paths, framework), "index.d.ts", outputDir, "dist");

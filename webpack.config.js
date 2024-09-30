@@ -34,6 +34,7 @@ module.exports = {
     "typescript",
     "handlebars",
     "yargs",
+    "change-case",
     /^@omer-x\/next-openapi-json-generator$/,
     /^@omer-x\/openapi-code-generator$/,
     /^@omer-x\/package-metadata$/,
