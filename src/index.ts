@@ -1,3 +1,4 @@
+#!/usr/bin/env -S npx tsx
 import path from "node:path";
 import generateOpenApiSpec from "@omer-x/next-openapi-json-generator";
 import * as codegen from "@omer-x/openapi-code-generator";

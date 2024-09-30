@@ -2,13 +2,14 @@
   "compilerOptions": {
     "outDir": "bin",
     "target": "ESNext",
-    "lib": ["ESNext"],
+    "lib": [],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    "noEmit": false,
     "esModuleInterop": true,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": false,
@@ -19,8 +20,7 @@
     },
   },
   "include": [
-    "webpack.config.js",
-    "src/**/*.ts",
+    "**/*.ts",
   ],
   "exclude": ["node_modules"]
 }
