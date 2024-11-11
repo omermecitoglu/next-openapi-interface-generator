@@ -46,7 +46,7 @@
   "dependencies": {
     "@omer-x/next-openapi-json-generator": "^1.0.1",
     "@omer-x/openapi-code-generator": "^0.3.2",
-    "@omer-x/package-metadata": "^0.1.2",
+    "@omer-x/package-metadata": "^1.0.2",
     "change-case": "^5.4.4",
     "yargs": "^17.7.2"
   },
